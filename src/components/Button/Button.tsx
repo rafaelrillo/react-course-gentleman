@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./Button.css"
 
 interface Props {
@@ -6,6 +7,10 @@ interface Props {
 }
 
 export const Button = ({label, parentMethod}: Props) => {
+
+  useEffect(() => {
+    console.log('useEffect working')
+  }, [label])
 
   return (
     <button className="custom" onClick={parentMethod}>
