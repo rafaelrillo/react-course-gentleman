@@ -1,54 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useFetch } from './hooks'
 import './App.css'
 
-const API_URL = 'https://pokeapi.co/api/v2/pokemon'
+const API_URL = 'https://jsonplaceholder.typicode.com/users'
 
+interface User {
+  id: number;
+  name: string;
+  lastname: string;
+}
 
+type Data = User[]
 
 function App() {
-  const [data, setData] = useState<[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
 
-  useEffect(() => {
-    const fetchData = async (url: string): Promise<void> => {
-      setLoading(true)
-      try {
-        const response = await fetch(url)
-        const data = await response.json();
+  const { data, error, loading } = useFetch<Data>(API_URL)
 
-        if(!response.ok) {
-          throw new Error('no funciona')
-        }
-
-        console.log(data)
-        setData(data)
-
-      } catch (err) {
-      
-        console.log(err)
-        setError(err as string)
-      
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData(API_URL)
-  }, [])
-
-  if(loading) {
+  if (loading) {
     return <div>Cargando...</div>
   }
 
-  if(error) {
-    return <div>Hubo un error</div>
+  if (error) {
+    return <div>Hubo un error: {error.message}</div>
   }
 
   return (
-    <>
-      <div>{JSON.stringify(data)}</div>
-    </>
+    <div>{data?.map((user) => {
+      return <p>{user.name}</p>
+    })}</div>
   )
 }
 
